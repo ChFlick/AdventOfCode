@@ -6,7 +6,15 @@ function calcJumps(input){
   
   while(index > -1 && index < inputs.length){
     increment = inputs[index];
-    inputs[index]++;
+    
+    // V1:
+    // inputs[index]++
+    // V2:
+    if(inputs[index] > 2){
+      inputs[index] --;
+    } else {
+      inputs[index]++;
+    }
     
     index += increment;
     
