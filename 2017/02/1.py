@@ -9,8 +9,6 @@ while True:
 
 for row in rows:
     nums = [int(s) for s in row.split()]
-    minVal = min(nums)
-    maxVal = max(nums)
-    result += maxVal - minVal
+    result += max(nums) - min(nums)
 
 print(result)
