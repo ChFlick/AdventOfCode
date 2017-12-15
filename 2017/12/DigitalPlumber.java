@@ -49,7 +49,14 @@ public class DigitalPlumber {
             ids.add(inputValues.get(0));
         }
 
+        outer:
         for (String id : ids) {
+            for(Set<String> group : groups){
+                if(group.contains(id)){
+                    continue outer;
+                }
+            }
+            
             groups.add(this.plumb(inp, id));
         }
 
