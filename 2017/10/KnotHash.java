@@ -11,17 +11,28 @@ public class KnotHash {
     private CircularList<Integer> numbers;
     private int skipSize = 0;
     private int currentPosition = 0;
+    private int iterations = 64;
 
     public KnotHash(){
+    }
+
+    public KnotHash(int iterations){
+        this.iterations = iterations;
+    }
+
+    private void init() {
         numbers = new CircularList<Integer>(256);
         for(int i = 0; i < 256; i++){
             numbers.add(i);
         }
+        skipSize = 0;
+        currentPosition = 0;
     }
 
-    public String mulitTie(List<Byte> bytes, int iterations) {
-        List<Byte> workBytes = new ArrayList<Byte>(bytes);
+    public String mulitTie(List<Byte> bytes) {
+        init();
 
+        List<Byte> workBytes = new ArrayList<Byte>(bytes);
         byte[] denseHash = new byte[16];
 
         workBytes.add((byte)17);
@@ -35,9 +46,10 @@ public class KnotHash {
         }
 
         for(int i = 0; i < 16; i++){
-            int denseVal = numbers.get(i * 16);
-            for(int j = 1; j < 16; j++){
-                denseVal = denseVal ^ numbers.get(i * 16 + j);
+            int startOfBlock = i * 16;
+            int denseVal = numbers.get(startOfBlock);
+            for(int offset = 1; offset < 16; offset++){
+                denseVal ^= numbers.get(startOfBlock + offset);
             }
 
             denseHash[i] = (byte)denseVal;
@@ -46,7 +58,7 @@ public class KnotHash {
         return Hex.encodeHexString(denseHash);
     }
 
-    public void tie(List<Byte> lengths, int iteration){
+    private void tie(List<Byte> lengths, int iteration){
         for(; skipSize < lengths.size() * iteration; skipSize++){
             int length = lengths.get(skipSize % lengths.size());
             if(length == 0 || length > numbers.size()){
