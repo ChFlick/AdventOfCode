@@ -1,11 +1,11 @@
-package osplus.wps.neo.service.wps;
-
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.codec.binary.Hex;
-
+import org.apache.commons.lang.ArrayUtils;
 
 public class KnotHash {
     private CircularList<Integer> numbers;
@@ -27,6 +27,18 @@ public class KnotHash {
         }
         skipSize = 0;
         currentPosition = 0;
+    }
+    
+    public String hash(String input){
+        List<Byte> bytes;
+        try {
+            bytes = new ArrayList<Byte>(Arrays.asList(ArrayUtils.toObject(input.getBytes("US-ASCII"))));
+            return mulitTie(bytes);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        
+        return "";
     }
 
     public String mulitTie(List<Byte> bytes) {
