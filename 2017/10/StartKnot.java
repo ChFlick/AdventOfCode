@@ -28,6 +28,6 @@ public class StartKnot {
 
 
         KnotHash kh = new KnotHash();
-        System.out.println(kh.mulitTie(bytes, 64));
+        System.out.println(kh.mulitTie(bytes));
     }
 }
