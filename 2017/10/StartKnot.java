@@ -1,5 +1,3 @@
-package osplus.wps.neo.service.wps;
-
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;

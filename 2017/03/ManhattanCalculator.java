@@ -1,5 +1,3 @@
-package osplus.dwp.order.service.neo.quotehandel;
-
 import java.util.HashMap;
 import java.util.Map;
 
