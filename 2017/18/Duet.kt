@@ -1,3 +1,5 @@
+import java.util.*
+
 fun main(args: Array<String>) {
     val input = """set i 31
 set a 1
@@ -43,79 +45,113 @@ jgz a -19
 """
 
     val instructions = input.split('\n')
-    val executor = InstructionExecutor()
-    var i = 0
+    val vm1 = InstructionExecutor(0)
+    val vm2 = InstructionExecutor(1)
 
-    loop@ while (true){
-        val current = instructions[i]
-        val firstVal = current.substring(4,5)
-        val secondVal =  if(current.length > 5) current.substring(6)
-                                                else ""
-        when(current.substring(0, 3)){
-            "add" -> executor.add(firstVal, secondVal)
-            "mul" -> executor.mul(firstVal, secondVal)
-            "mod" -> executor.mod(firstVal, secondVal)
-            "set" -> executor.set(firstVal, secondVal)
-            "snd" -> executor.snd(firstVal)
+    while (!vm1.locked || !vm2.locked){
+        vm1.execute(instructions[vm1.instructionPointer])
+        vm2.execute(instructions[vm2.instructionPointer])
+
+        if(vm1.outputVal != 0L) {
+            vm2.inputQueue.add(vm1.outputVal)
+            vm1.outputVal = 0L
+        }
+        if(vm2.outputVal != 0L){
+            vm1.inputQueue.add(vm2.outputVal)
+            vm2.outputVal = 0L
+        }
+
+    }
+
+    print(vm2.timesSend)
+}
+
+class InstructionExecutor(registerNumber: Int) {
+    private val registers = mutableMapOf<String, Long>()
+    var instructionPointer = 0
+    val inputQueue = ArrayDeque<Long>()
+    var outputVal = 0L
+    var timesSend = 0
+    var locked: Boolean = false
+
+    init {
+        registers["p"] = registerNumber.toLong()
+    }
+
+    fun execute(operation: String) {
+        val firstVal = operation.substring(4,5)
+        val secondVal =  if(operation.length > 5) operation.substring(6)
+        else ""
+        when(operation.substring(0, 3)){
+            "add" -> add(firstVal, secondVal)
+            "mul" -> mul(firstVal, secondVal)
+            "mod" -> mod(firstVal, secondVal)
+            "set" -> set(firstVal, secondVal)
+            "snd" -> snd(firstVal)
             "rcv" -> {
-              if(executor.rcv(firstVal)) {
-                  println(executor.lastSound)
-                  break@loop
-              }
+                if(!rcv(firstVal)) {
+                    return
+                }
             }
             "jgz" -> {
-                val jmp = executor.jgz(firstVal, secondVal)
+                val jmp = jgz(firstVal, secondVal)
                 if(jmp != 0L){
-                    i += jmp.toInt()
-                    continue@loop
+                    instructionPointer += jmp.toInt()
+                    return
                 }
             }
         }
 
-        i++
+        instructionPointer++
     }
-}
 
-class InstructionExecutor {
-    val registers = mutableMapOf<String, Long>()
-    var lastSound = 0L
-
-    fun add(firstVal: String, secondVal: String){
+    private fun add(firstVal: String, secondVal: String){
         registers[firstVal] = getValue(firstVal) + getValue(secondVal)
     }
 
-    fun mul(firstVal: String, secondVal: String){
+    private fun mul(firstVal: String, secondVal: String){
         registers[firstVal] = getValue(firstVal) * getValue(secondVal)
     }
 
-    fun set(firstVal: String, secondVal: String){
+    private fun set(firstVal: String, secondVal: String){
         registers[firstVal] = getValue(secondVal)
     }
 
-    fun mod(firstVal: String, secondVal: String){
+    private fun mod(firstVal: String, secondVal: String){
         registers[firstVal] = getValue(firstVal) % getValue(secondVal)
     }
 
-    fun snd(firstVal: String){
+    private fun snd(firstVal: String){
         if(getValue(firstVal) != 0L){
-            lastSound = getValue(firstVal)
+            outputVal = getValue(firstVal)
+            timesSend++
         }
     }
 
-    fun rcv(firstVal: String): Boolean = getValue(firstVal) != 0L
+    private fun rcv(firstVal: String) : Boolean = when(inputQueue.isEmpty()){
+        true ->  {
+            locked = true
+            false
+        }
+        false -> {
+            locked = false
+            registers[firstVal] = inputQueue.pop()
+            true
+        }
+    }
 
-    fun jgz(firstVal: String, secondVal: String): Long{
-        if(getValue(firstVal) > 0){
+    private fun jgz(firstVal: String, secondVal: String): Long{
+        if(getValue(firstVal) > 0L){
             return getValue(secondVal)
         }
 
-        return 0
+        return 0L
     }
 
 
     private fun getValue(value: String): Long =
-        if(value.toIntOrNull() != null) value.toLong()
-                                   else registers.getOrDefault(value, 0)
+        if(value.toLongOrNull() != null) value.toLong()
+                                   else registers.getOrDefault(value, 0L)
 
 }
 
