@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Coprocessor Conflagration</title>
+    <script type="text/javascript" src="./coprocessorConflagration.js"></script>
+    <script>
+        function start(){
+            var input = document.getElementById('input').value;
+            runProcessor(input);
+        }
+    </script>
+</head>
+<body>
+<textarea id="input" type="text" onkeypress="start()" style="width: 400px; height: 800px; float: left"></textarea>
+<div id="result" style="font-size: 16px"></div>
+</body>
+</html>
