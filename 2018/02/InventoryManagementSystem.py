@@ -1,9 +1,9 @@
 from itertools import groupby
 
 result = 0
-lines = open("input.txt", "r").readlines();
+lines = open("input.txt", "r").readlines()
 twos = 0
-threes = 0;
+threes = 0
 for line in lines:
     # sort the array 1, 1, 1, 2, 2, 3, 3
     # group it 1 = [1, 1, 1], 2 = [2, 2]...
