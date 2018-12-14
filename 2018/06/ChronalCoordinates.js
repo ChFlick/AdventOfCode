@@ -2,8 +2,6 @@ var fs = require("fs"),
     path = require("path"),
     filePath = path.join(__dirname, 'input.txt');
 
-const guardRegExp = /#([0-9]+)/;
-
 fs.readFile(filePath, {
     encoding: 'utf-8'
 }, function (err, data) {
