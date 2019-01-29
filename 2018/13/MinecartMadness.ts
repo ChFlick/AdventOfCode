@@ -13,17 +13,19 @@ interface Point {
     y: number;
 }
 
+const arrows: string = '<>^v';
+
 const arrowByDirection: string[] = [];
-arrowByDirection[Direction.Up] = "^";
-arrowByDirection[Direction.Right] = ">";
-arrowByDirection[Direction.Down] = "v";
-arrowByDirection[Direction.Left] = "<";
+arrowByDirection[Direction.Up] = '^';
+arrowByDirection[Direction.Right] = '>';
+arrowByDirection[Direction.Down] = 'v';
+arrowByDirection[Direction.Left] = '<';
 
 const directionByArrow: Direction[] = [];
-directionByArrow["^"] = Direction.Up;
-directionByArrow[">"] = Direction.Right;
-directionByArrow["v"] = Direction.Down;
-directionByArrow["<"] = Direction.Left;
+directionByArrow['^'] = Direction.Up;
+directionByArrow['>'] = Direction.Right;
+directionByArrow['v'] = Direction.Down;
+directionByArrow['<'] = Direction.Left;
 
 function replaceAt(string: string, index: number, replace: string) {
     return string.substring(0, index) + replace + string.substring(index + 1);
@@ -34,9 +36,9 @@ class Map {
     private map: string[];
 
     constructor(fileName: string) {
-        let fileBuffer: string = fs.readFileSync(path.resolve(__dirname, 'testInput.txt'));
+        let fileBuffer: string = fs.readFileSync(path.resolve(__dirname, 'input.txt'));
         this.map = fileBuffer.toString().split('\r\n');
-        console.log("Read map:\n", this.map);
+        console.log('Read map:\n', this.map);
     }
 
     getMinecarts(): Minecart[] {
@@ -44,9 +46,9 @@ class Map {
 
         this.map.forEach((line, y) => {
             line.split('').forEach((mapElement, x) => {
-                if ("<>^v".includes(mapElement)) {
+                if (arrows.includes(mapElement)) {
                     console.log(mapElement, directionByArrow[mapElement]);
-                    
+
                     minecarts.push(new Minecart(directionByArrow[mapElement], { x, y }, this));
                 }
             });
@@ -61,7 +63,7 @@ class Map {
 
     printWith(minecarts: Minecart[]): any {
         let mapCopy: string[] = this.map.slice();
-        mapCopy = mapCopy.map(row => row.replace("<", "-").replace(">", "-").replace("^", "|").replace("v", "|"));
+        mapCopy = mapCopy.map(row => row.replace('<', '-').replace('>', '-').replace('^', '|').replace('v', '|'));
         minecarts.forEach(m => mapCopy[m.getPos().y] = replaceAt(mapCopy[m.getPos().y], m.getPos().x, arrowByDirection[m.getDirection()]));
         console.log(mapCopy);
     }
@@ -71,6 +73,7 @@ class Minecart {
     private direction: Direction;
     private position: Point;
     private map: Map;
+    private intersectionNum: number = 0;
 
     constructor(direction: Direction, position: Point, map: Map) {
         this.direction = direction;
@@ -94,14 +97,30 @@ class Minecart {
                 break;
         }
 
-        console.log(this.direction);
         if (this.currentMapTile() === '\\') {
-            // FIXME
-            this.direction = (this.direction + this.direction === Direction.Down ? 3 : 1) % 4;
+            this.goesUpOrDown() ? this.turnLeft() : this.turnRight();
         } else if (this.currentMapTile() === '/') {
-            this.direction = (this.direction + this.direction === Direction.Down ? 1 : 3) % 4;
+            this.goesUpOrDown() ? this.turnRight() : this.turnLeft();
+        } else if (this.currentMapTile() === '+') {
+            if (this.intersectionNum % 3 === 0) {
+                this.turnLeft()
+            } else if (this.intersectionNum % 3 === 2) {
+                this.turnRight();
+            }
+            this.intersectionNum++;
         }
-        console.log(this.direction);
+    }
+
+    private goesUpOrDown() {
+        return this.direction % 2 == 0;
+    }
+
+    private turnLeft() {
+        return this.direction = (this.direction + 3) % 4;
+    }
+
+    private turnRight() {
+        return this.direction = (this.direction + 1) % 4;
     }
 
     private currentMapTile() {
@@ -125,7 +144,7 @@ class Minecart {
     }
 }
 
-const INPUT_PATH = "testInput.txt";
+const INPUT_PATH = 'testInput.txt';
 
 
 let map = new Map(INPUT_PATH);
@@ -133,10 +152,26 @@ const minecarts = map.getMinecarts();
 
 console.log(minecarts);
 
-for (let index = 0; index < 8; index++) {
-    minecarts.sort((a, b) => a.comparePos(b));
-    minecarts.forEach(m => m.move());
+try {
+    for (let index = 0; index < 200; index++) {
+        minecarts.sort((a, b) => a.comparePos(b));
+        minecarts.forEach(m => {
+            m.move();
 
-    console.log("Iteration", index);
-    map.printWith(minecarts);
+            const crashPosition: string = minecarts.map(m => JSON.stringify(m.getPos()))
+                .filter((val, index, arr) => {
+                    const times = arr.reduce((sum, curr) => sum += curr === val ? 1 : 0, 0);
+                    return times !== 1;
+                })[0];
+
+            if(crashPosition !== undefined) {
+                throw Error(crashPosition);
+            }
+        });
+
+        console.log('Iteration', index);
+        map.printWith(minecarts);
+    }
+} catch (e) {
+    console.log(e);
 }
