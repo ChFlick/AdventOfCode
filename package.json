@@ -1,5 +1,8 @@
 {
   "dependencies": {
     "typescript": "^3.2.4"
+  },
+  "scripts": {
+    "build": "tsc 2018/14/ChocolateCharts.ts -t ES2017 --module commonjs -w"
   }
 }
