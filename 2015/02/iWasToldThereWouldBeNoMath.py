@@ -18,3 +18,15 @@ for size in sizes:
     summedSize += min([l * w, w * h, h * l])
 
 print(summedSize)
+
+ribbonSize = 0
+for size in sizes:
+    l, w, h = size.split("x")
+    l = int(l)
+    w = int(w)
+    h = int(h)
+    
+    ribbonSize += 2 * l + 2 * w + 2 * h - 2 * max([l, w, h])
+    ribbonSize += l * w * h
+
+print(ribbonSize)
