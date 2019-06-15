@@ -9,3 +9,14 @@ for v in data:
     result = result + 1 if v is "(" else result - 1
 
 print(result)
+
+# Part 2
+result = 0
+position = 1
+
+for v in data:
+    result = result + 1 if v is "(" else result - 1
+    if result == -1:
+        print(position)
+        break
+    position = position + 1
