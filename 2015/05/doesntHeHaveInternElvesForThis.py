@@ -14,6 +14,18 @@ def isNice(string: str):
 
     return False
 
+def isNiceSecond(string: str):
+    for i in range(len(string) - 3):
+        if string[i] == string[i + 2]:
+            for j in range(len(string) - 2):
+                substring = string[j:j+2]
+                for k in range(j + 2, len(string) - 1):
+                    if substring == string[k:k+2]:
+                        return True
+            break
+
+    return False
+
 filename = "input.txt"
 
 content: list
@@ -24,6 +36,14 @@ with open(filename, "r") as inputData:
 num = 0
 for string in content:
     if isNice(string):
+        num = num + 1
+
+print(num)
+
+#Part 2
+num = 0
+for string in content:
+    if isNiceSecond(string):
         num = num + 1
 
 print(num)
