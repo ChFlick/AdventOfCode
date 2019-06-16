@@ -1,7 +1,7 @@
 from PIL import Image
 import numpy as np
 
-filename = "/home/chris/adventOfCode/2015/06/input.txt"
+filename = "input.txt"
 
 content: list
 
