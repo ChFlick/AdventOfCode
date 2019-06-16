@@ -15,9 +15,17 @@ for line in content:
     newline = re.sub(r"\\x[a-f0-9]{2}", "a", newline)
     newline = newline.replace("\\\\", "a")
     newline = newline.replace("\\\"", "a")
-    print(newline)
     textsizes.append(len(newline))
 
 codesize = reduce((lambda x,y: x + y), codesizes)
 textsize = reduce((lambda x,y: x + y), textsizes)
 print(codesize - textsize)
+
+
+encodedsizes = []
+for line in content:
+    newline = line.replace("\\", "\\\\").replace("\"", "\\\"")
+    encodedsizes.append(len(newline) + 2)
+
+encodedsize = reduce((lambda x,y: x + y), encodedsizes)
+print(encodedsize - codesize)
