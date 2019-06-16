@@ -37,7 +37,7 @@ class Operation(object):
         values[self.y] = actions[self.action](x1val, x2val)
         return values
 
-filename = "input.txt"
+filename = "input_2.txt"
 
 content: list
 
