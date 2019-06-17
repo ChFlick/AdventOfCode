@@ -34,3 +34,9 @@ while not isValid(password):
     password = increment(password)
 
 print(password)
+
+password = increment(password)
+while not isValid(password):
+    password = increment(password)
+
+print(password)
