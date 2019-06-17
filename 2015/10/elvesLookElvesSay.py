@@ -20,7 +20,7 @@ def lookAndSay(input):
     return result
 
 currentValue = "1321131112"
-for _ in range(40):
+for _ in range(50):
     currentValue = lookAndSay(currentValue)
     #print(currentValue)
 #print(currentValue)
