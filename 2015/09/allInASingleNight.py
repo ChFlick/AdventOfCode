@@ -32,3 +32,4 @@ for line in content:
 
 costs = [calulateCosts(x, routes) for x in permutations(cities)]
 print(min(costs))
+print(max(costs))
