@@ -26,3 +26,30 @@ for line in content:
 
 print(max(results))
 
+results = []
+for i in range(1, 2504):
+    currentResult = []
+    for line in content:
+        speed = int(line[3])
+        time = int(line[6])
+        wait = int(line[13])
+
+        base = int(i / (time + wait)) * speed * time
+        
+        rest = i % (time + wait)
+        if rest > time:
+            result = base + speed * time
+        else:
+            result = base + speed * rest
+
+        currentResult.append(result)
+    results.append(currentResult)
+
+scores = [0] * len(content)
+for result in results:
+    m = max(result)
+    for i in range(len(content)):
+        if result[i] == m:
+            scores[i] = scores[i] + 1
+
+print(scores)
