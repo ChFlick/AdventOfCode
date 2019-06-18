@@ -29,3 +29,19 @@ for seating in permutations(people):
 
 print(max(gains))
 
+relations = relations + [Relation("me", x, 0) for x in people]
+relations = relations + [Relation(x, "me", 0) for x in people]
+people.add("me")
+
+gains = []
+for seating in permutations(people):
+    gain = 0
+    for i in range(len(seating)):
+        p1 = seating[i]
+        p2 = seating[(i + 1) % len(people)]
+        r1 = next(x for x in relations if x.p1 == p1 and x.p2 == p2)
+        r2 = next(x for x in relations if x.p1 == p2 and x.p2 == p1)
+        gain = gain + r1.gain + r2.gain
+    gains.append(gain)
+
+print(max(gains))
