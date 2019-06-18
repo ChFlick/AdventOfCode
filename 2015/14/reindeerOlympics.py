@@ -5,12 +5,6 @@ filename = "input.txt"
 with open(filename, "r") as inputData:
     content: str = inputData.readlines()
 
-class Relation():
-    def __init__(self, p1, p2, gain):
-        self.p1 = p1
-        self.p2 = p2
-        self.gain = gain
-
 content = [x.split(" ") for x in content]
 duration = 2503
 
@@ -31,3 +25,4 @@ for line in content:
     results.append(result)
 
 print(max(results))
+
