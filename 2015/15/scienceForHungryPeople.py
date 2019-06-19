@@ -5,7 +5,7 @@ filename = "/c/dev/AdventOfCode/2015/15/input.txt"
 with open(filename, "r") as inputData:
     content: str = [x.split(" ") for x in inputData.readlines()]
 
-combinations = [(int(x[2][:-1]), int(x[4][:-1]), int(x[6][:-1]), int(x[8][:-1])) for x in content]
+combinations = [(int(x[2][:-1]), int(x[4][:-1]), int(x[6][:-1]), int(x[8][:-1]), int(x[10])) for x in content]
 
 maxScore = 0
 for i in range(1, 101):
@@ -29,6 +29,11 @@ for i in range(1, 101):
                 c = 0
             if d < 0:
                 d = 0
+
+            #Comment the next 2 lines out for V1 
+            if (i * combinations[0][4] + j * combinations[1][4] + k * combinations[2][4] + l * combinations[3][4]) > 500:
+                continue
+
             if a * b * c * d > maxScore:
                 maxScore = a * b * c * d
 
