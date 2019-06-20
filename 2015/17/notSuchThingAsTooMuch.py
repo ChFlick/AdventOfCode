@@ -25,4 +25,5 @@ sumsUp(containers, [])
 print(possibilities)
 print(len(possibilities))
 
-
+minLength = min([len(x) for x in possibilities])
+print(len([x for x in possibilities if len(x) == minLength]))
