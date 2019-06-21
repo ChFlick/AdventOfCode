@@ -28,7 +28,7 @@ def iteration(arr):
         next.append(nextl)
     return next
 
-filename = "/home/chris/dev/adventOfCode/2015/18/input.txt"
+filename = "input.txt"
 
 with open(filename, "r") as inputData:
     content: str = [x.replace("\n", "") for x in inputData.readlines()]
