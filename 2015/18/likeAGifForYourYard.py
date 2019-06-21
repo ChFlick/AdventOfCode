@@ -1,9 +1,13 @@
 from PIL import Image
 import numpy as np
 from functools import reduce
+import imageio
+import os
+import matplotlib.pyplot as plt
+import matplotlib.cm as cm
 
 def isMarked(i, j, arr):
-    return i < 100 and j < 100 and i > -1 and j > -1 and arr[i][j] == "."
+    return i < 100 and j < 100 and i > -1 and j > -1 and arr[i][j] == "#"
 
 def iteration(arr):
     next = []
@@ -18,9 +22,9 @@ def iteration(arr):
                     count = count + isMarked(i - x, j - y, arr)
             current = isMarked(i, j, arr)
             if (current and (count == 2 or count == 3)) or (not current and count == 3):
-                nextl = nextl + "."
-            else:
                 nextl = nextl + "#"
+            else:
+                nextl = nextl + "."
         next.append(nextl)
     return next
 
@@ -29,15 +33,22 @@ filename = "/home/chris/dev/adventOfCode/2015/18/input.txt"
 with open(filename, "r") as inputData:
     content: str = [x.replace("\n", "") for x in inputData.readlines()]
 
+
+gifnames = []
 for i in range(100):
     content = iteration(content)
-    print(content)
+    bol = []
+    for x in content:
+        bol.append([y == "#" for y in x])
 
+    gifnames.append("result" + str(i) + ".jpg")
+    plt.imsave("result" + str(i) + ".jpg", np.array(bol), cmap=cm.gray)
+    
 result = sum([reduce(lambda x,y: x + (1 if y == "#" else 0), line, 0) for line in content])
 print(result)
 
-bol = []
-for x in content:
-    bol.append([y == "#" for y in x])
-
-Image.fromarray(np.array(bol)).save("result.jpg")
+images = []
+for filename in gifnames:
+    images.append(imageio.imread(filename))
+    os.remove(filename)
+imageio.mimsave('render.gif', images)
