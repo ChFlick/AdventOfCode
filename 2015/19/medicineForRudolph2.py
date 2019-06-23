@@ -1,36 +1,30 @@
+import time
+
 filename = "/home/chris/dev/adventOfCode/2015/19/input.txt"
 
-def step(start, rules):
-    results = []
-    for rule in rules:
-        indices = []
-        replaceLen = len(rule[0])
-        for i in range(len(start) - (replaceLen - 1)):
-            if start[i:i + replaceLen] == rule[0]:
-                indices.append(i)
-        
-        for i in indices:
-            results.append(start[:i] + rule[1] + start[i + replaceLen:])
-    return results
-
 rules = []
-goal = ""
-current = set(["e"])
+current = ""
+goal = "e"
 with open(filename, "r") as inputData:
     for line in inputData:
         if line.count("=>") > 0:
             rules.append((line.split(" ")[0], line.split(" ")[2].replace("\n","")))
         elif len(line) > 0:
-            goal = line
+            current = line
 
 iterations = 0
-while goal not in current:
-    nextCurrent = []
-    for val in current:
-        nextCurrent = nextCurrent + step(val, rules)
-    current = set(nextCurrent)
+results = [x[1] for x in rules]
+while not current == goal:
+    indices = [current.rfind(x) for x in results]
+    maxIndex = max(indices)
+    maxIndexResult = rules[indices.index(max(indices))][0]
+    print(indices, maxIndex, maxIndexResult)
+
+    current = current[:maxIndex] + maxIndexResult
+    print(current)
+
+    # time.sleep(.100)
     iterations = iterations + 1
-    print(iterations)
 
 print(current)
 print(iterations)
