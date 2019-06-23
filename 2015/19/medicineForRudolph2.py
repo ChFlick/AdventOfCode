@@ -1,6 +1,6 @@
 import time
 
-filename = "/home/chris/dev/adventOfCode/2015/19/input.txt"
+filename = "input.txt"
 
 rules = []
 current = ""
@@ -14,17 +14,24 @@ with open(filename, "r") as inputData:
 
 iterations = 0
 results = [x[1] for x in rules]
+results.sort(key=len)
+results.reverse()
 while not current == goal:
-    indices = [current.rfind(x) for x in results]
-    maxIndex = max(indices)
-    maxIndexResult = rules[indices.index(max(indices))][0]
-    print(indices, maxIndex, maxIndexResult)
+    index = -1
+    indexRule = ""
+    for r in results:
+        index = current.rfind(r)
+        if index > -1:
+            indexRule = r
+            break
 
-    current = current[:maxIndex] + maxIndexResult
-    print(current)
+    indexReplacement = [x for x in rules if x[1] == indexRule][0][0]
+    # print(index, indexRule, indexReplacement)
+
+    current = current[:index] + indexReplacement + current[index + len(indexRule):]
+    # print(current)
 
     # time.sleep(.100)
     iterations = iterations + 1
 
-print(current)
 print(iterations)
