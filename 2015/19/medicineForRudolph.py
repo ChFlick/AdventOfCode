@@ -10,3 +10,17 @@ with open(filename, "r") as inputData:
             start = line
 
 print(rules, start)
+
+results = set()
+for rule in rules:
+    indices = []
+    replaceLen = len(rule[0])
+    for i in range(len(start) - (replaceLen - 1)):
+        if start[i:i + replaceLen] == rule[0]:
+            indices.append(i)
+    
+    for i in indices:
+        results.add(start[:i] + rule[1] + start[i + replaceLen:])
+
+print(results)
+print(len(results))
