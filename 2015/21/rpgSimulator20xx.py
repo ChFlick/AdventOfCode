@@ -63,3 +63,20 @@ for weapon in weapons:
                 minCosts = min([minCosts, costs])
 
 print(minCosts)
+
+maxCost = 0
+for weapon in weapons:
+    for armor in armors:
+        for ringperms in permutations(rings):
+            costs = weapon[0] + armor[0] + ringperms[0][0] + ringperms[1][0]
+            if costs < maxCost:
+                continue
+
+            damage = weapon[1] + armor[1] + ringperms[0][1] + ringperms[1][1]
+            arm = weapon[2] + armor[2] + ringperms[0][2] + ringperms[1][2]
+            player = GameEntity(100, damage, arm)
+            boss = GameEntity(BOSSHP, BOSSDMG, BOSSARM)
+            if fight(player, boss) == "boss":
+                maxCost = max([maxCost, costs])
+
+print(maxCost)
