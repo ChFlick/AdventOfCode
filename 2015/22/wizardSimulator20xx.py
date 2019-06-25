@@ -1,10 +1,12 @@
+from copy import copy
+
 BOSS_HP = 71
 BOSS_DMG = 10
 
 PLAYER_HP = 50
 PLAYER_MANA = 500
 
-DEBUG = True
+DEBUG = False
 
 class Boss:
     def __init__(self, hp, damage):
@@ -24,6 +26,7 @@ class Player:
     def __init__(self, hp, mana):
         self.hp = hp
         self.mana = mana
+        self.manaUsed = 0
         self.armor = 0
         self.shieldTimer = 0
         self.rechargeTimer = 0
@@ -33,6 +36,7 @@ class Player:
             print("Player casts Magic Missle; dealing 4 damage")
         boss.hp -= 4
         self.mana -= 53
+        self.manaUsed += 53
 
     def drain(self, boss: Boss):
         if DEBUG:
@@ -40,6 +44,7 @@ class Player:
         boss.hp = boss.hp - 2
         self.hp += 2
         self.mana -= 73
+        self.manaUsed += 73
 
     def shield(self):
         if DEBUG:
@@ -47,18 +52,21 @@ class Player:
         self.armor = 7
         self.shieldTimer = 6
         self.mana -= 113
+        self.manaUsed += 113
 
     def poison(self, boss):
         if DEBUG:
             print("Player casts poison")
         boss.poisonTimer = 6
         self.mana -= 173
+        self.manaUsed += 173
 
     def recharge(self):
         if DEBUG:
             print("Player casts recharge")
         self.rechargeTimer = 5
         self.mana -= 229
+        self.manaUsed += 229    
 
     def __repr__(self):
         return "Player has " + str(self.hp) + " hit points, " + str(self.armor) + " armor, " + str(self.mana) + " mana"
@@ -81,44 +89,95 @@ def tick(player: Player, boss: Boss):
         boss.hp -= 3
         boss.poisonTimer -= 1
 
+def fight(player: Player, boss: Boss, minMana: int):
+    if player.mana < 0:
+        return minMana
+    if player.manaUsed > minMana:
+        return minMana
+    if boss.hp < 1:
+        return player.manaUsed
+    if player.hp < 1:
+        return minMana
+
+    for i in range(5):
+        p: Player = copy(player)
+        b: Boss = copy(boss)
+
+        if i == 0:
+            p.magicMissle(b)
+        elif i == 1:
+            p.drain(b)
+        elif i == 2:
+            if player.shieldTimer > 0:
+                continue
+            p.shield()
+        elif i == 3:
+            if b.poisonTimer > 0:
+                continue
+            p.poison(b)
+        elif i == 4:
+            if p.rechargeTimer > 0:
+                continue
+            p.recharge()
+        
+
+        tick(p, b)
+        if b.hp < 1:
+            minMana = min([minMana, p.manaUsed])
+            continue
+        if p.hp < 1:
+            continue
+        b.attack(p)
+        tick(p, b)
+        minMana = fight(p, b, minMana)
+
+    return minMana
+    
+
 def main():
-    player = Player(10, 250)
-    boss = Boss(14, 8)
+    player = Player(PLAYER_HP, PLAYER_MANA)
+    boss = Boss(BOSS_HP, BOSS_DMG)
 
-    print(player)
-    print(boss)
-    player.recharge()
-    tick(player, boss)
+    minMana = 9999999999999999
 
-    print(player)
-    print(boss)
-    boss.attack(player)
-    tick(player, boss)
+    minMana = fight(player, boss, minMana)
+    print(minMana)
 
-    print(player)
-    print(boss)
-    player.shield()
-    tick(player, boss)
+    exit(0)
+    # print(player)
+    # print(boss)
+    # player.recharge()
+    # tick(player, boss)
 
-    print(player)
-    print(boss)
-    boss.attack(player)
-    tick(player, boss)
+    # print(player)
+    # print(boss)
+    # boss.attack(player)
+    # tick(player, boss)
 
-    print(player)
-    print(boss)
-    player.drain(boss)
-    tick(player, boss)
+    # print(player)
+    # print(boss)
+    # player.shield()
+    # tick(player, boss)
 
-    print(player)
-    print(boss)
-    boss.attack(player)
-    tick(player, boss)
+    # print(player)
+    # print(boss)
+    # boss.attack(player)
+    # tick(player, boss)
 
-    print(player)
-    print(boss)
-    player.poison(boss)
-    tick(player, boss)
+    # print(player)
+    # print(boss)
+    # player.drain(boss)
+    # tick(player, boss)
+
+    # print(player)
+    # print(boss)
+    # boss.attack(player)
+    # tick(player, boss)
+
+    # print(player)
+    # print(boss)
+    # player.poison(boss)
+    # tick(player, boss)
 
 
 if __name__ == "__main__":
