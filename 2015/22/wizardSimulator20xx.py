@@ -90,6 +90,8 @@ def tick(player: Player, boss: Boss):
         boss.poisonTimer -= 1
 
 def fight(player: Player, boss: Boss, minMana: int):
+    # Comment line below out for V1
+    player.hp -= 1
     if player.mana < 0:
         return minMana
     if player.manaUsed > minMana:
