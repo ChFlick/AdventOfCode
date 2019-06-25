@@ -6,24 +6,39 @@ with open(filename, "r") as infile:
 print(instructions)
 
 registers = {}
-pointer: int = 0
+pointer = 0
 
 def jio(register, n):
-    if registers.get(register, 0) % 2 == 1:
-        pointer += n
+    global pointer
+    if registers.get(register, 0) == 1:
+        pointer += n - 1
 
 def jie(register, n):
+    global pointer
     if registers.get(register, 0) % 2 == 0:
-        pointer += n
+        pointer += n - 1
 
-def inc(register):
-    registers[register] = registers.get(register, 1)
+def inc(register, _):
+    global pointer
+    registers[register] = registers.get(register, 0) + 1
 
-def jmp(offset):
-    pointer += offset
+def jmp(offset, _):
+    global pointer
+    pointer += int(offset) - 1
 
-def hlf(register):
+def hlf(register, _):
     registers[register] = registers.get(register, 0) / 2
 
-def tpl(register):
+def tpl(register, _):
     registers[register] = registers.get(register, 0) * 3
+
+while -1 < pointer < len(instructions):
+    instruction = instructions[pointer]
+    command = instruction.split()[0]
+    first = instruction.split()[1].replace(",", "")
+    second = 0 if len(instruction.split()) < 3 else instruction.split()[2]
+
+    globals()[command](first, int(second))
+    pointer += 1
+
+print(registers)
