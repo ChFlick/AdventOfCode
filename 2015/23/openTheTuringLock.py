@@ -5,7 +5,8 @@ with open(filename, "r") as infile:
 
 print(instructions)
 
-registers = {}
+# registers = {}
+registers = {"a": 1} #V2
 pointer = 0
 
 def jio(register, n):
