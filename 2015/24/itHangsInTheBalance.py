@@ -10,7 +10,7 @@ weights = [1, 2, 3, 7, 11, 13, 17, 19, 23, 31, 37, 41, 43, 47, 53, 59, 61, 67, 7
 
 weights.reverse()
 
-groupWeight = sum(weights) / 3
+groupWeight = sum(weights) / 4 # 3 for V1
 combies = []
 
 for i in range(1, 8):
