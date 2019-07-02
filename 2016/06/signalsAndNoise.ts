@@ -16,6 +16,12 @@ const charNumbersPerCol = cols.map(col => col.split("")
     }, {})
 )
 
+// V1
 const maxNums = charNumbersPerCol.map(charNums => Object.keys(charNums).reduce((max, curr) => charNums[curr] > max[1] ? [curr, charNums[curr]] : max, ["", 0]))
 
 console.log(maxNums.reduce((s, c) => s + c[0], ""));
+
+// V2
+const minNums = charNumbersPerCol.map(charNums => Object.keys(charNums).reduce((min, curr) => charNums[curr] < min[1] ? [curr, charNums[curr]] : min, ["", 999]))
+
+console.log(minNums.reduce((s, c) => s + c[0], ""));
