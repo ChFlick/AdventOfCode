@@ -1,2 +1,2 @@
-# AdventOfCode
-My Code Solutions for the Advent of Code
+# Advent Of Code
+My solutions for the Advent of Code
