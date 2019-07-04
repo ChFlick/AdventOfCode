@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-const fileBuffer: string = fs.readFileSync(path.resolve(__dirname, 'input.txt'));
+const fileBuffer: Buffer = fs.readFileSync(path.resolve(__dirname, 'input.txt'));
 const compressed: string = fileBuffer.toString();
 
 let decompressed = "";

@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-const fileBuffer: string = fs.readFileSync(path.resolve(__dirname, 'input.txt'));
+const fileBuffer: Buffer = fs.readFileSync(path.resolve(__dirname, 'input.txt'));
 const commands = fileBuffer.toString().split('\n');
 
 const keypad: Readonly<number[][]> = [[1, 2, 3], [4, 5, 6], [7, 8, 9]];

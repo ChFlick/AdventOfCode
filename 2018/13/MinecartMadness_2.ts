@@ -36,7 +36,7 @@ class Map {
     private map: string[];
 
     constructor(fileName: string) {
-        let fileBuffer: string = fs.readFileSync(path.resolve(__dirname, 'input.txt'));
+        let fileBuffer: Buffer = fs.readFileSync(path.resolve(__dirname, 'input.txt'));
         this.map = fileBuffer.toString().split('\r\n');
         console.log('Read map:\n', this.map);
     }

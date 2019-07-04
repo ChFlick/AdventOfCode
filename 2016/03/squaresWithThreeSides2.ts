@@ -3,7 +3,7 @@ import * as path from 'path';
 
 type Triangle = [number, number, number]
 
-const fileBuffer: string = fs.readFileSync(path.resolve(__dirname, 'input.txt'));
+const fileBuffer: Buffer = fs.readFileSync(path.resolve(__dirname, 'input.txt'));
 const numbers: number[][] = fileBuffer.toString().split('\n').map(line => line.trim().split(/ +/).map(x => parseInt(x)))
 const flatNumbers = numbers.map(n => n[0]).concat(numbers.map(n => n[1])).concat(numbers.map(n => n[2]))
 const triangles: Triangle[] = []

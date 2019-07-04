@@ -40,7 +40,7 @@ const screen = [".".repeat(50).split(""),
 ".".repeat(50).split(""),
 ".".repeat(50).split(""),
 ".".repeat(50).split("")]
-const fileBuffer: string = fs.readFileSync(path.resolve(__dirname, 'input.txt'));
+const fileBuffer: Buffer = fs.readFileSync(path.resolve(__dirname, 'input.txt'));
 const commands: string[] = fileBuffer.toString().split('\n');
 
 for (const command of commands) {

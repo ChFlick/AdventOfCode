@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-const fileBuffer: string = fs.readFileSync(path.resolve(__dirname, 'input.txt'));
+const fileBuffer: Buffer = fs.readFileSync(path.resolve(__dirname, 'input.txt'));
 const ips: string[][] = fileBuffer.toString().split('\n').map(line => line.split(/\[|\]/));
 
 const getBabsFromAbas = (str: string) => {

@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-const fileBuffer: string = fs.readFileSync(path.resolve(__dirname, 'input.txt'));
+const fileBuffer: Buffer = fs.readFileSync(path.resolve(__dirname, 'input.txt'));
 const rows: string[] = fileBuffer.toString().split('\n');
 const cols: string[] = [];
 for(let i = 0; i < rows[0].length; i++) {

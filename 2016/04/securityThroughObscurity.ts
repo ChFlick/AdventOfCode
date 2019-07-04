@@ -42,7 +42,7 @@ class Room {
     }
 }
 
-const fileBuffer: string = fs.readFileSync(path.resolve(__dirname, 'input.txt'));
+const fileBuffer: Buffer = fs.readFileSync(path.resolve(__dirname, 'input.txt'));
 const rooms: Room[] = fileBuffer.toString().split('\n')
     .map(line => line.split("["))
     .map(split => new Room(split[0], split[1].substr(0, split[1].length - 1)));
