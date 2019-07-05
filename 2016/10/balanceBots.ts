@@ -100,5 +100,7 @@ while (instructions.length > 0) {
 // console.log(bots);
 // console.log(outputs);
 
-console.log(bots.find(bot => bot.valueOne === 17 && bot.valueTwo === 61))
-console.log(bots.find(bot => bot.valueOne === 61 && bot.valueTwo === 17))
+console.log(bots.find(bot => bot.valueOne === 17 && bot.valueTwo === 61));
+console.log(bots.find(bot => bot.valueOne === 61 && bot.valueTwo === 17));
+
+console.log(outputs[0] * outputs[1] * outputs[2]);
