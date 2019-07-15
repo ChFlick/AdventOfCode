@@ -17,7 +17,13 @@ function floorsHash(floors: string[][]) {
 
 const seenSetups = new Map<string, number>();
 
-let minSteps = 500;
+let minSteps = 50;
+
+// Example works
+// const floors = [["LLM", "HHM"],
+// ["HHG"],
+// ["LLG"],
+// []];
 
 const floors = [["THG", "THM", "PLG", "STG"],
 ["PLM", "STM"],
@@ -56,18 +62,18 @@ function findValidGoal(floors: string[][], elevatorFloor: number = 0, steps: num
         const oldFloor = currentFloor.filter(ele => !possibility.includes(ele));
 
         if (elevatorFloor === 0) {
-            setTimeout(findValidGoal, 0, [oldFloor, [...floors[1], ...possibility], floors[2], floors[3]], 1, steps + 1);
+            findValidGoal([oldFloor, [...floors[1], ...possibility], floors[2], floors[3]], 1, steps + 1);
         }
         else if (elevatorFloor === 1) {
-            setTimeout(findValidGoal, 0, [[...floors[0], ...possibility], oldFloor, floors[2], floors[3]], 0, steps + 1);
-            setTimeout(findValidGoal, 0, [floors[0], oldFloor, [...floors[2], ...possibility], floors[3]], 2, steps + 1);
+            findValidGoal([[...floors[0], ...possibility], oldFloor, floors[2], floors[3]], 0, steps + 1);
+            findValidGoal([floors[0], oldFloor, [...floors[2], ...possibility], floors[3]], 2, steps + 1);
         }
         else if (elevatorFloor === 2) {
-            setTimeout(findValidGoal, 0, [floors[0], [...floors[1], ...possibility], oldFloor, floors[3]], 1, steps + 1);
-            setTimeout(findValidGoal, 0, [floors[0], floors[1], oldFloor, [...floors[3], ...possibility]], 3, steps + 1);
+            findValidGoal([floors[0], [...floors[1], ...possibility], oldFloor, floors[3]], 1, steps + 1);
+            findValidGoal([floors[0], floors[1], oldFloor, [...floors[3], ...possibility]], 3, steps + 1);
         }
         else if (elevatorFloor === 3) {
-            setTimeout(findValidGoal, 0, [floors[0], floors[1], [...floors[2], ...possibility], oldFloor], 2, steps + 1);
+            findValidGoal([floors[0], floors[1], [...floors[2], ...possibility], oldFloor], 2, steps + 1);
         }
 
     }
