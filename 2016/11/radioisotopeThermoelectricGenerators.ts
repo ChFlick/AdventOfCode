@@ -19,7 +19,7 @@ function floorsHash(floors: string[][], elevatorFloor: number) {
 
 const seenSetups = new Map<string, number>();
 
-let minSteps = 60;
+let minSteps = 100;
 
 function findValidGoal(floors: string[][], elevatorFloor: number = 0, steps: number = 0) {
     if (steps >= minSteps) { return; }
@@ -95,8 +95,13 @@ function findValidGoal(floors: string[][], elevatorFloor: number = 0, steps: num
 // ["THM"],
 // []];
 
-// My input
-const floors = [["THG", "THM", "PLG", "STG"],
+// My input V1
+// const floors = [["THG", "THM", "PLG", "STG"],
+// ["PLM", "STM"],
+// ["PRG", "PRM", "RUG", "RUM"],
+// []];
+
+const floors = [["THG", "THM", "PLG", "STG", "ELG", "ELM", "DIG", "DIM"],
 ["PLM", "STM"],
 ["PRG", "PRM", "RUG", "RUM"],
 []];
