@@ -14,7 +14,13 @@ const foundKeys: [string, number][] = [];
 
 let i = 0;
 while (foundKeys.length < 64) {
-    const currentHash: string = crypto.createHash('md5').update(salt + i).digest('hex');
+    let currentHash: string = crypto.createHash('md5').update(salt + i).digest('hex');
+
+    // Comment the next three lines for V1
+    for(let j = 0; j < 2016; j++) {
+        currentHash = crypto.createHash('md5').update(currentHash).digest('hex');
+    }
+
     if (TRIPLET_REGEX.test(currentHash)) {
         possibleKeys[i] = currentHash;
         tripletsByHash[currentHash] = TRIPLET_REGEX.exec(currentHash)[0];
@@ -41,4 +47,5 @@ while (foundKeys.length < 64) {
     i++;
 }
 
+console.log(foundKeys);
 console.log(foundKeys[63][1]);
