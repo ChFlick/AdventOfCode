@@ -15,7 +15,8 @@ class Disc {
     isAlignedAt = (time: number) => this.atTime(time) === 0;
 }
 
-const fileBuffer: Buffer = fs.readFileSync(path.resolve(__dirname, 'input.txt'));
+//input.txt for v1
+const fileBuffer: Buffer = fs.readFileSync(path.resolve(__dirname, 'input2.txt'));
 const discs: Disc[] = fileBuffer.toString().split("\n").map(v => v.split(" ")).map(v => new Disc(parseInt(v[3]), parseInt(v[11].slice(0, -1))));
 
 const allDiscsAligned = (discs: Disc[], time: number) => discs.reduce(
