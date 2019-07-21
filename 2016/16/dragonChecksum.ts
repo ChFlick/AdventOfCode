@@ -1,5 +1,7 @@
 const input = "10111100110001111";
-const targetLength = 272;
+// V1
+// const targetLength = 272;
+const targetLength = 35651584;
 
 const dragonize = (binarystr: string): string => binarystr + "0" + binarystr.split("").reverse().map(v => v === "0" ? "1" : "0").join("");
 const makeDragonChecksum = (binarystr: string): string => binarystr.match(/../g).map(v => v[0] == v[1] ? "1" : "0").join("");
