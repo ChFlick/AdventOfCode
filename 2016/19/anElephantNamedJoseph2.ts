@@ -1,35 +1,43 @@
 const input = 3012210;
 
-const elves = "1".repeat(input).split('').map(e => parseInt(e));
+class Elf {
+    pos: any;
+    val: number;
 
-while (elves.filter(e => e > 0).length !== 1) {
-    for (let i = 0; i < elves.length; i++) {
-        if(elves[i] === 0) {
-            continue;
-        }
-
-        const elvesWithPackets = elves.filter(e => e > 0).length;
-        if ((input - elvesWithPackets) % 10000 === 0) {
-            console.log(elvesWithPackets);
-        }
-        
-        const oppositeNumber = Math.floor(elvesWithPackets / 2);
-
-        let oppositeIndex = 0;
-        let elfCount = 1;
-        for (let j = i + 1; (j % elves.length) !== i; j++) {
-            if (elfCount === oppositeNumber) {
-                oppositeIndex = j % elves.length;
-            }
-            if (elves[j % elves.length] > 0) {
-                elfCount++;
-            }
-        }
-
-        const nextElfPackets = elves[oppositeIndex];
-        elves[oppositeIndex] = 0;
-        elves[i] += nextElfPackets;
+    constructor(pos) {
+        this.pos = pos;
+        this.val = 1;
     }
 }
 
-console.log(elves.findIndex(e => e > 0) + 1); // + 1 as for the result array starts at 1
+function spliceOne(list, index) {
+    for (var i = index, k = i + 1, n = list.length; k < n; i += 1, k += 1)
+        list[i] = list[k];
+    list.pop();
+}
+
+let elves: Elf[] = [];
+for (let i = 0; i < input; i++) {
+    elves.push(new Elf(i + 1));
+}
+
+while (elves.length > 1) {
+    for (let i = 0; i < elves.length; i++) {
+        const elf = elves[i];
+        const oppositeIndex = (Math.floor(elves.length / 2) + i) % elves.length;
+
+        elf.val += elves[oppositeIndex].val
+        spliceOne(elves, oppositeIndex);
+
+        if (oppositeIndex < i) {
+            i--;
+        }
+
+        if (elves.length % 10000 === 0) {
+            console.log(elves.length);
+        }
+    };
+
+}
+
+console.log(elves);
