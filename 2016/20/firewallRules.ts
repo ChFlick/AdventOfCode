@@ -25,3 +25,18 @@ for (const range of ranges) {
         break;
     }
 }
+
+let n = 0;
+for (const range of ranges) {
+    const oneHigher = range.to + 1;
+    if (!ranges.find((any => any.includes(oneHigher)))) {
+        const higherRanges = ranges.filter(r => r.from > oneHigher);
+        const nextRange = higherRanges.sort((a, b) => a.from - b.from)[0];
+        if(!nextRange) {
+            continue;
+        }
+        n += nextRange.from - oneHigher;
+    }
+}
+
+console.log(n);
