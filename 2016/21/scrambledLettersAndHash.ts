@@ -23,8 +23,16 @@ const move = (str: string, from: number, to: number) => {
     return strWithout.substr(0, to) + str[from] + strWithout.substr(to)
 };
 
-const rotateBasedRight = (str: string, char: string) => rotateRight(str, 1 + (str.indexOf(char) < 4 ? str.indexOf(char) : str.indexOf(char) + 1));
-const rotateBasedLeft = (str: string, char: string) => rotateLeft(str, 1 + (str.indexOf(char) > 3 ? str.indexOf(char) : str.indexOf(char) + 1));
+const rotateBased = (str: string, char: string) => rotateRight(str, 1 + (str.indexOf(char) < 4 ? str.indexOf(char) : str.indexOf(char) + 1));
+
+const undoBasedRotate = (str: string, base: string) => {
+    const before = str;
+    let result = rotateRight(str, 1);
+    while (rotateBased(result, base) !== before) {
+        result = rotateRight(result, 1);
+    }
+    return result;
+}
 
 let letters = 'abcdefgh';
 
@@ -52,12 +60,13 @@ for (const instruction of instructions) {
         letters = move(letters, parseInt(parts[2]), parseInt(parts[5]));
     }
     else if (instruction.startsWith('rotate based')) {
-        letters = rotateBasedRight(letters, parts[6]);
+        letters = rotateBased(letters, parts[6]);
     }
 }
 
 console.log(letters);
 
+letters = 'fbgdceah';
 // reverse
 for (const instruction of instructions.reverse()) {
     const parts = instruction.split(" ");
@@ -80,7 +89,7 @@ for (const instruction of instructions.reverse()) {
         letters = move(letters, parseInt(parts[5]), parseInt(parts[2]));
     }
     else if (instruction.startsWith('rotate based')) {
-        letters = rotateBasedLeft(letters, parts[6]);
+        letters = undoBasedRotate(letters, parts[6]);
     }
 }
 
