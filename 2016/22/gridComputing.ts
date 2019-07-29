@@ -42,6 +42,11 @@ console.log(viablePairs.length);
 const grid: Map<string, Node> = new Map();
 nodes.forEach(node => grid.set(node.position.toString(), node));
 
+let t = "";
+for (let y = 0; y < 29; y++) {
+    t += y < 9 ? y + " " : y + "";
+}
+console.log(t);
 
 for (let x = 0; x < 35; x++) {
     let t = "";
@@ -49,5 +54,6 @@ for (let x = 0; x < 35; x++) {
         const node = nodes.find(n => n.position[0] === x && n.position[1] === y);
         t += (node.avail > node.used ? '_' : (viablePairs.includes(node.position.toString()) ? "." : "#"))  + " ";
     }
-    console.log(t);
+    console.log(t + x);
 }
+// calc by hand: move to the bottom left = [4 + 4 + 10 + 8 + 1] + move upward in "circles" 33*5(165) = 192
