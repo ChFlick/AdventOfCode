@@ -4,13 +4,20 @@ import * as path from 'path';
 const fileBuffer: Buffer = fs.readFileSync(path.resolve(__dirname, 'input.txt'));
 const instructions: string[] = fileBuffer.toString().split("\n");
 
+// V1
+// const registers = {
+//     "a": 7,
+//     "b": 0,
+//     "c": 0,
+//     "d": 0
+// };
+
 const registers = {
-    "a": 7,
+    "a": 12,
     "b": 0,
     "c": 0,
     "d": 0
 };
-
 
 let ip = 0;
 while (ip < instructions.length) {
