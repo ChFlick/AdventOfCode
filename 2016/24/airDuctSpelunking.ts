@@ -18,26 +18,24 @@ map.forEach((x, i) => {
 console.log(startPos, countNumbersOnMap(map));
 
 const removeNumberAt = (map: string[], position: [number, number]): string[] => {
-    const zeroLine = map[position[0]].split('');
+    const tempMap = map.slice(0);
+    const zeroLine = tempMap[position[0]].split('');
     zeroLine[position[1]] = '.';
-    map[position[0]] = zeroLine.join('');
+    tempMap[position[0]] = zeroLine.join('');
 
-    return map;
+    return tempMap;
 }
 
 map = removeNumberAt(map, startPos);
 
-console.log(map);
-console.log(countNumbersOnMap(map));
-
-const findNearest = (map: string[], startPos: [number, number]): [[number, number], number] => {
+const findNearest = (map: string[], startPos: [number, number]): [[number, number][], number] => {
     const visitedPositions: Set<string> = new Set();
     let positions: Map<string, [number, number]> = new Map();
     positions.set(startPos.toString(), startPos);
 
-    let foundPosition: [number, number] = null;
+    let foundPositions: [number, number][] = [];
     let moves = 0;
-    while (foundPosition === null) {
+    while (foundPositions.length < 1) {
         moves++;
         let nextPositions: Map<string, [number, number]> = new Map();
         positions.forEach((pos, hash) => {
@@ -46,8 +44,7 @@ const findNearest = (map: string[], startPos: [number, number]): [[number, numbe
             }
 
             if (isNumber(map[pos[0]][pos[1]])) {
-                foundPosition = pos;
-                return;
+                foundPositions.push(pos);
             }
 
             if (map[pos[0] + 1][pos[1]] !== '#') {
@@ -68,20 +65,18 @@ const findNearest = (map: string[], startPos: [number, number]): [[number, numbe
         positions = nextPositions;
     }
 
-    return [foundPosition, moves - 1];
+    return [foundPositions, moves - 1];
 };
 
-let fullMoves = 0;
-let currentPosition = startPos;
-while(countNumbersOnMap(map) > 0) {
-    console.log('start from ' + currentPosition);
-    
-    const [foundPosition, moves] = findNearest(map, currentPosition);
-    map = removeNumberAt(map, foundPosition);
-    fullMoves += moves;
-    currentPosition = foundPosition;
+let next: [string[], [number, number], number][] = [[map, startPos, 0]]
+while (countNumbersOnMap(next[0][0]) > 0) {
+    let overNext: [string[], [number, number], number][] = []
 
-    console.log(moves, 'to', foundPosition);
+    next.forEach(([map, currentPosition, moves]) => {
+        const [foundPositions, addedMoves] = findNearest(map, currentPosition);
+        overNext = overNext.concat(foundPositions.map(pos => [removeNumberAt(map, pos), pos, moves + addedMoves]));
+    });
+    next = overNext;
 }
 
-console.log(fullMoves);
+console.log(next);
