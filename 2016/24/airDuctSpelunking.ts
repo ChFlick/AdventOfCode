@@ -35,7 +35,7 @@ const findNearest = (map: string[], startPos: [number, number]): [[number, numbe
 
     let foundPositions: [[number, number], number][] = [];
     let moves = 0;
-    while (foundPositions.length !== countNumbersOnMap(map) - 1) {
+    while (foundPositions.length < countNumbersOnMap(map)) {
         moves++;
         let nextPositions: Map<string, [number, number]> = new Map();
         positions.forEach((pos, hash) => {
@@ -69,23 +69,21 @@ const findNearest = (map: string[], startPos: [number, number]): [[number, numbe
 };
 
 let next: [string[], [number, number], number][] = [[map, startPos, 0]]
-while (true) {
+while (next.find(n => countNumbersOnMap(n[0]))) {
     let overNext: [string[], [number, number], number][] = []
     
     next.forEach(([map, currentPosition, moves]) => {
         const results = findNearest(map, currentPosition);
         results.forEach(([pos, addedMoves]) => {
             const another: [string[], [number, number], number] = [removeNumberAt(map, pos), pos, moves + addedMoves];
-            if(!overNext.find(o => o[0].toString() === another[0].toString() && o[1].toString() === another[1].toString())) {
-                overNext.push(another);
-            };
+            overNext.push(another);
         });
     });
 
     console.log(Math.min(...next.map(([map, pos, moves]) => moves)));
     
-    if(overNext.length === 0) {
-        break;
-    }
     next = overNext;
 }
+
+console.log(next);
+console.log(Math.min(...next.map(([map, pos, moves]) => moves)));
