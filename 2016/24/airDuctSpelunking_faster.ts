@@ -2,10 +2,13 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 const fileBuffer: Buffer = fs.readFileSync(path.resolve(__dirname, 'input.txt'));
-let map: string[] = fileBuffer.toString().split("\n");
+const map: string[] = fileBuffer.toString().split("\n");
 
 type NumberAndDistance = [number, number];
-const isNumber = (char: string) => !isNaN(parseInt(char));
+
+const isNumber = (char: string) =>
+    !isNaN(parseInt(char));
+
 const countNumbersOnMap = (map: string[]) =>
     map.reduce((sum, curr) => sum + curr.split('').reduce((lineSum, char) => lineSum + (isNumber(char) ? 1 : 0), 0), 0);
 
@@ -68,13 +71,6 @@ const distances = nums
 
 let minSteps = 3000;
 const findShortestRoute = (currentNumber: number, path: number[], stepsTaken: number) => {
-    if (path.length === nums.length) {
-        minSteps = Math.min(minSteps, stepsTaken);
-        console.log(path, stepsTaken);
-        
-        return;
-    }
-
     if (stepsTaken > minSteps) {
         return;
     }
@@ -84,6 +80,11 @@ const findShortestRoute = (currentNumber: number, path: number[], stepsTaken: nu
     }
 
     path = [...path, currentNumber];
+    if (path.length === nums.length) {
+        minSteps = Math.min(minSteps, stepsTaken);
+        return;
+    }
+
     distances[currentNumber].forEach((distance) => {
         findShortestRoute(distance[0], path, stepsTaken + distance[1]);
     });
