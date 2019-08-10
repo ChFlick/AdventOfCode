@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import { globalAgent } from 'http';
 
+type MapStuff = Elf | Goblin | Blocker | Free
 class Entity {
     position: [number, number]
     hp: number
@@ -33,7 +33,7 @@ const elves: Elf[] = [];
 const fileBuffer: Buffer = fs.readFileSync(path.resolve(__dirname, 'input.txt'));
 const inputMap: string[] = fileBuffer.toString().split("\n");
 
-const map: (Elf | Goblin | Blocker | Free)[][] = [];
+const map: MapStuff[][] = [];
 inputMap.forEach(() => map.push([]));
 
 for (let y = 0; y < inputMap.length; y++) {
@@ -55,4 +55,13 @@ for (let y = 0; y < inputMap.length; y++) {
     }
 }
 
-console.log(map);
+const findClosestEntity = (position: [number, number], map: MapStuff[][], entityType: typeof Entity) => {
+
+}
+
+const order: Entity[] = map.reduce((arr, row) => arr.concat(row.filter(ele => ele instanceof Entity)), [])
+                           .filter((ele): ele is Entity => ele instanceof Entity); // last filter is only a typeguard
+
+order.forEach(entity => {
+    // entity.moveToClosestEnemy(); => findClosestEntity(entity.position, map, Entity)
+});
