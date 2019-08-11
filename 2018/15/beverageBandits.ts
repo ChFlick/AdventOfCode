@@ -20,6 +20,20 @@ class Entity {
     isDead(): boolean {
         return this.hp <= 0;
     }
+
+    moveToClosestEnemy(map: MapObject[][]) {
+        const positions = getPosVariations(this.position);
+        const steps = positions.map(pos => stepsToClosestEntity(pos, map, this instanceof Elf));
+        console.log(steps);
+        console.log(steps.indexOf(Math.min(...steps.filter(v => v !== undefined))));
+        
+        const nextPosition = positions[steps.indexOf(Math.min(...steps.filter(v => v !== undefined)))];
+        console.log(positions, steps, nextPosition);
+
+        map[nextPosition[0]][nextPosition[1]] = this;
+        map[this.position[0]][this.position[1]] = '.';
+        this.position = nextPosition;
+    }
 }
 
 class Goblin extends Entity { }
@@ -57,14 +71,30 @@ for (let y = 0; y < inputMap.length; y++) {
     }
 }
 
+const printMap = (map: MapObject[][]) => {
+    for (let y = 0; y < map.length; y++) {
+        let line = '';
+        for (let x = 0; x < map[y].length; x++) {
+            if (map[y][x] instanceof Goblin) {
+                line += 'G';
+            } else if (map[y][x] instanceof Elf) {
+                line += 'E';
+            } else if (map[y][x] === '.' || map[y][x] === '#') {
+                line += map[y][x];
+            }
+        }
+        console.log(line);
+    }
+};
+
 const getPosVariations = (pos: Position): Position[] =>
-    [[pos[0] + 1, pos[1]],
-    [pos[0] - 1, pos[1]],
+    [[pos[0] - 1, pos[1]],
+    [pos[0], pos[1] - 1],
     [pos[0], pos[1] + 1],
-    [pos[0], pos[1] - 1]];
+    [pos[0] + 1, pos[1]]];
 
 const stepsToClosestEntity = (position: Position, map: MapObject[][], searchGoblin: boolean): number => {
-    let currentPositions: Position[] = getPosVariations(position);
+    let currentPositions: Position[] = [position];
     let steps = 0;
     while (currentPositions.length > 0) {
         const nextPositions: Position[] = [];
@@ -78,7 +108,7 @@ const stepsToClosestEntity = (position: Position, map: MapObject[][], searchGobl
 
             nextPositions.push(...getPosVariations(pos));
         }
-        
+
         currentPositions = nextPositions;
         steps++;
     }
@@ -88,8 +118,7 @@ const order: Entity[] = map.reduce((arr, row) => arr.concat(row.filter(ele => el
     .filter((ele): ele is Entity => ele instanceof Entity); // last filter is only a typeguard
 
 order.forEach(entity => {
-    // entity.moveToClosestEnemy(); => findClosestEntity(entity.position, map, Entity)
+    entity.moveToClosestEnemy(map);
+    printMap(map);
 });
-
-console.log(stepsToClosestEntity([5,7], map, false));
 
