@@ -54,7 +54,6 @@ class Entity {
         this.attack(enemyToAttack);
         if (enemyToAttack.isDead()) {
             map[enemyToAttack.position[0]][enemyToAttack.position[1]] = '.';
-            printMap(map);
         }
     }
 }
@@ -156,9 +155,13 @@ while (containsGoblinAndElf(map)) {
         if(entity.isDead()) { continue; }
         entity.moveToClosestEnemy(map);
         entity.attackNextEnemy(map);
-    };
+    }
 
-    // printMap(map);
+    // console.log(rounds);
+    printMap(map);
+    // console.log(order);
+    console.log();
+
     rounds++;
 }
 
@@ -167,3 +170,6 @@ const order: Entity[] = map.reduce((arr, row) => arr.concat(row.filter(ele => el
 
 console.log(rounds - 1, order.reduce((hp, entity) => hp + entity.hp, 0));
 console.log((rounds - 1) * order.reduce((hp, entity) => hp + entity.hp, 0));
+// for some reason, my input has even on round less
+console.log(rounds - 2, order.reduce((hp, entity) => hp + entity.hp, 0));
+console.log((rounds - 2) * order.reduce((hp, entity) => hp + entity.hp, 0));
