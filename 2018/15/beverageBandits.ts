@@ -24,11 +24,17 @@ class Entity {
     moveToClosestEnemy(map: MapObject[][]) {
         const positions = getPosVariations(this.position);
         const steps = positions.map(pos => stepsToClosestEntity(pos, map, this instanceof Elf));
-        console.log(steps);
+        if(steps.filter(s => s !== undefined).length === 0) {
+            return;
+        }
         console.log(steps.indexOf(Math.min(...steps.filter(v => v !== undefined))));
         
         const nextPosition = positions[steps.indexOf(Math.min(...steps.filter(v => v !== undefined)))];
         console.log(positions, steps, nextPosition);
+
+        if(map[nextPosition[0]][nextPosition[1]] instanceof Entity) {
+            return;
+        }
 
         map[nextPosition[0]][nextPosition[1]] = this;
         map[this.position[0]][this.position[1]] = '.';
@@ -94,9 +100,11 @@ const getPosVariations = (pos: Position): Position[] =>
     [pos[0] + 1, pos[1]]];
 
 const stepsToClosestEntity = (position: Position, map: MapObject[][], searchGoblin: boolean): number => {
+    const visitedPositions = new Set();
     let currentPositions: Position[] = [position];
     let steps = 0;
     while (currentPositions.length > 0) {
+        currentPositions.forEach(pos => visitedPositions.add(pos.toString()));
         const nextPositions: Position[] = [];
         for (const pos of currentPositions) {
             const ele = map[pos[0]][pos[1]];
@@ -109,7 +117,7 @@ const stepsToClosestEntity = (position: Position, map: MapObject[][], searchGobl
             nextPositions.push(...getPosVariations(pos));
         }
 
-        currentPositions = nextPositions;
+        currentPositions = nextPositions.filter(pos => !visitedPositions.has(pos.toString()));
         steps++;
     }
 }
@@ -119,6 +127,15 @@ const order: Entity[] = map.reduce((arr, row) => arr.concat(row.filter(ele => el
 
 order.forEach(entity => {
     entity.moveToClosestEnemy(map);
-    printMap(map);
 });
+printMap(map);
 
+order.forEach(entity => {
+    entity.moveToClosestEnemy(map);
+});
+printMap(map);
+
+order.forEach(entity => {
+    entity.moveToClosestEnemy(map);
+});
+printMap(map);
