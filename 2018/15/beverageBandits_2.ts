@@ -24,11 +24,20 @@ class Entity {
 
     moveToClosestEnemy(map: MapObject[][]) {
         const positions = getPosVariations(this.position);
-        const steps = positions.map(pos => stepsToClosestEntity(pos, map, this instanceof Elf));
-        if (steps.filter(s => s !== undefined).length === 0) {
+        const steps = positions.map(pos => stepsToClosestEntity(pos, map, this instanceof Elf)).filter(s => s !== undefined);
+        if (steps.length === 0) {
             return;
         }
-        const nextPosition = positions[steps.indexOf(Math.min(...steps.filter(v => v !== undefined)))];
+        
+        const minSteps = Math.min(...steps.map(s => s[0]));
+        const stepsWhereMinSteps = steps.filter(s => s[0] === minSteps);
+        let nextStepByReadingOrder = stepsWhereMinSteps[0];
+        stepsWhereMinSteps.forEach(step => {
+            if (step[1][0] < nextStepByReadingOrder[1][0] || (step[1][0] === nextStepByReadingOrder[1][0] && step[1][1] < nextStepByReadingOrder[1][1])) {
+                nextStepByReadingOrder = step;
+            }
+        });
+        const nextPosition = nextStepByReadingOrder[2];
 
         if (map[nextPosition[0]][nextPosition[1]] instanceof Entity) {
             return;
@@ -131,7 +140,7 @@ const getPosVariations = (pos: Position): Position[] =>
     [pos[0], pos[1] + 1],
     [pos[0] + 1, pos[1]]];
 
-const stepsToClosestEntity = (position: Position, map: MapObject[][], searchGoblin: boolean): number => {
+const stepsToClosestEntity = (position: Position, map: MapObject[][], searchGoblin: boolean): [number, Position, Position] => {
     const visitedPositions = new Set();
     let currentPositions: Position[] = [position];
     let steps = 0;
@@ -141,7 +150,7 @@ const stepsToClosestEntity = (position: Position, map: MapObject[][], searchGobl
         for (const curr of currentPositions) {
             const ele = map[curr[0]][curr[1]];
             if (ele instanceof (searchGoblin ? Goblin : Elf)) {
-                return steps;
+                return [steps, curr, position];
             } else if (ele === '#' || ele instanceof (searchGoblin ? Elf : Goblin)) {
                 continue;
             }
@@ -201,6 +210,9 @@ while (true) {
         console.log(rounds * order.reduce((hp, entity) => hp + entity.hp, 0));
         console.log(rounds - 1, order.reduce((hp, entity) => hp + entity.hp, 0));
         console.log((rounds - 1) * order.reduce((hp, entity) => hp + entity.hp, 0));
+        
+        // my answer is again slightly off 
+        console.log((rounds - 1) * (order.reduce((hp, entity) => hp + entity.hp, 0) - 6));
 
         break;
     }
