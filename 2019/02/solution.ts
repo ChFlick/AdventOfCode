@@ -12,13 +12,15 @@ const target = (pos) => operations[pos + 3];
 
 let position = 0;
 while (operations[position] !== 99) {
+      const p1 = param1(position);
+      const p2 = param2(position);
+      const t = target(position);
+
       const op = operations[position];
       if (op === 1) {
-            const processedVal = param1(position) + param2(position);
-            operations[target(position)] = processedVal;
+            operations[t] = p1 + p2;
       } else if (op === 2) {
-            const processedVal = param1(position) * param2(position);
-            operations[target(position)] = processedVal;
+            operations[t] = p1 * p2;
       }
       position += 4;
 }
