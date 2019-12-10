@@ -14,20 +14,7 @@ for (let y = 0; y < asteroids.length; y++) {
 }
 
 const radiusBetween = (x1, y1, x2, y2) => Math.atan2(x2 - x1, y2 - y1) * 180 / Math.PI;
-const getVisibileAsteroidsFrom = (ix: number, iy: number) => {
-    const radii = new Set();
-    for (let x = 0; x < asteroids.length; x++) {
-        for (let y = 0; y < asteroids[x].length; y++) {
-            if (!asteroids[x][y]) {
-                continue;
-            }
+const visibleAsteroidsFromPosition = (x: number, y: number) => asteroidList.reduce((radii, asteroid) => radii.add(radiusBetween(asteroid[0], asteroid[1], x, y)), new Set<number>()).size;
 
-            const angleDeg = radiusBetween(x, y, ix, iy);
-            radii.add(angleDeg);
-        }
-    }
-    return radii.size;
-}
-
-const visibleAsteroids = asteroidList.map(coords => getVisibileAsteroidsFrom(coords[0], coords[1]));
+const visibleAsteroids = asteroidList.map(coords => visibleAsteroidsFromPosition(coords[0], coords[1]));
 console.log(Math.max(...visibleAsteroids));
