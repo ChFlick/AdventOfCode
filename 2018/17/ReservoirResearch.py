@@ -1,11 +1,21 @@
 import re
+from dataclasses import dataclass
+from typing import Type, Tuple
 
 map = {}
+max_y = 0
+
+
+@dataclass
+class Water:
+    parent: Type["Water"]
+    active: bool
+    pos: Tuple[int, int]
 
 
 def main():
-    map[(500, 0)] = "water"
-    max_y = 0
+    global max_y
+    map[(500, 0)] = Water(None, True, (500, 0))
     for line in open("input.txt", "r"):
         start_x = line.startswith("x")
         positions = [int(x) for x in re.findall("[0-9]+", line)]
@@ -15,51 +25,55 @@ def main():
             map[nextpos] = "clay"
             max_y = max(max_y, nextpos[1])
 
-    while len([y for y in map if y[1] == max_y and map[y] == "water"]) == 0:
-        for y in reversed(range(max_y)):
-            if flow_level(y):
-                break
+    while len([x for x in map if isinstance(map[x], Water) and map[x].active]) > 0:
+        active_water_poss = [x for x in map if isinstance(map[x], Water) and map[x].active]
+        for pos in active_water_poss:
+            flow(pos)
 
     print_map(map)
     print("Water tiles: " + str(len([x for x in map if map[x] == "water"]) - 1))
 
 
-def flow_level(y):
-    if y == 999:
-        print_map(map)
-    water_at_y = [tile for tile in map if tile[1] == y and map[tile] == "water"]
-    if len(water_at_y) == 0:
-        return False
+def flow(pos):
+    # print_map(map)
 
-    water_flown = len([flown for flown in [flow(water) for water in water_at_y] if flown]) > 0
-    return water_flown
+    current_water = map[pos]
+    if pos[1] > max_y:
+        current_water.active = False
+        return True
 
-
-def flow(water):
-    below = (water[0], water[1] + 1)
+    below = (pos[0], pos[1] + 1)
     if below not in map:
-        map[below] = "water"
+        map[below] = Water(current_water, True, below)
+        current_water.active = False
         return True
     else:
         has_flown = False
-        left = (water[0] - 1, water[1])
-        right = (water[0] + 1, water[1])
+        left = (pos[0] - 1, pos[1])
+        right = (pos[0] + 1, pos[1])
         if left not in map:
-            map[left] = "water"
+            map[left] = Water(current_water, True, left)
+            current_water.active = False
             has_flown = True
-            flow_sideways(left)
-        if right not in map:
-            map[right] = "water"
+        elif right not in map:
+            map[right] = Water(current_water, True, right)
+            current_water.active = False
             has_flown = True
-            flow_sideways(right, False)
+
+        else:
+            current_water.parent.active = True
+            current_water.active = False
+
         return has_flown
 
 
 def flow_sideways(water, left=True):
+    current_water = map[water]
     below = (water[0], water[1] + 1)
     side_tile = (water[0] - 1, water[1]) if left else (water[0] + 1, water[1])
     if side_tile not in map and below in map:
-        map[side_tile] = "water"
+        map[side_tile] = Water(current_water, True, side_tile)
+        current_water.active = False
         flow_sideways(side_tile, left)
 
 
@@ -86,7 +100,7 @@ def print_map(map):
             if (x, y) not in map:
                 line += "."
             else:
-                line += "~" if map[(x, y)] == "water" else "#"
+                line += "#" if map[(x, y)] == "clay" else "~"
         print(line)
 
 
