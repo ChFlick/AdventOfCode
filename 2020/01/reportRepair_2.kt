@@ -8,9 +8,9 @@ fun main(args: Array<String>) {
 
     input.forEach { first ->
         input.forEach { second ->
-            input.forEach { thrid ->
-                if (first != second && second != thrid && first != thrid && first + second + thrid == 2020) {
-                    println("""$first, $second, $thrid, ${first * second * thrid}""")
+            input.forEach { third ->
+                if (first != second && second != third && first != third && first + second + third == 2020) {
+                    println("""$first, $second, $third, ${first * second * third}""")
                     exitProcess(0)
                 }
             }
