@@ -18,7 +18,7 @@ fun main(args: Array<String>) {
         numSeated = grid.numSeated
         println()
         println(grid)
-        grid = grid.nextIteration
+        grid = grid.nextIteration()
     } while (numSeated != grid.numSeated)
 
     println()
@@ -33,7 +33,7 @@ data class Grid(val grid: List<List<Cell>>) {
         sum + row.count { it == Cell.OCCUPIED }
     }
 
-    val nextIteration =
+    fun nextIteration() =
         Grid(grid.mapIndexed { y, row ->
             row.mapIndexed { x, cell ->
                 when (cell) {
