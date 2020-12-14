@@ -26,7 +26,7 @@ fun main(args: Array<String>) {
             "E" -> pos = Pair(pos.first + value, pos.second)
             "W" -> pos = Pair(pos.first - value, pos.second)
             "R" -> degrees = (degrees + value).absoluteValue % 360
-            "L" -> degrees = (degrees - value).absoluteValue % 360
+            "L" -> degrees = (360 + degrees - value).absoluteValue % 360
         }
 
         println("$command$value moves $value units $actualCommand to $pos - Facing ${DIRECTION_BY_DEGREE[degrees]}")
