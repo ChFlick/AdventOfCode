@@ -7,6 +7,7 @@ import kotlin.system.measureTimeMillis
 import kotlin.time.Duration
 import kotlin.time.measureTimedValue
 
+// BRUTE FORCE °,..,°
 @kotlin.time.ExperimentalTime
 fun main(args: Array<String>) {
     val executionTime = measureTimeMillis {
@@ -21,11 +22,11 @@ fun main(args: Array<String>) {
 
         val maxBus = busses.keys.maxOrNull() ?: 0
         val firstPotentialNumberForMax = (100000000000000L..Long.MAX_VALUE).find {
-            ((it % maxBus) + busses[maxBus]!!) == maxBus
+            (((it % maxBus) + busses[maxBus]!!) % maxBus) == 0L
         }!!
 
         println((firstPotentialNumberForMax..Long.MAX_VALUE step maxBus).find { t ->
-            busses.all { ((t % it.key) + it.value) == it.key }
+            busses.all { (((t % it.key) + it.value) % it.key) == 0L}
         })
     }
     println(Duration.convert(executionTime.toDouble(), TimeUnit.MILLISECONDS, TimeUnit.SECONDS))
