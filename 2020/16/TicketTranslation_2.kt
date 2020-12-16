@@ -40,31 +40,32 @@ fun main(args: Array<String>) {
         }
     } + listOf(yourTicket)
 
-    fun <T> permutationsOf(list: List<T>): List<List<T>> =
-        if (list.size == 1)
-            listOf(list)
-        else
-            list.flatMapIndexed { index, value ->
-                permutationsOf(list.filterIndexed { subIndex, _ -> subIndex != index })
-                    .map {
-                        it.plus(value)
+
+    val rulesByField = mutableMapOf<Int, Rule>()
+
+    while (rulesByField.size < rules.size) {
+        val restRules = rules.filterNot { it in rulesByField.values }
+        val possibleRulesByField = validTickets[0].indices.map { field ->
+            restRules.filter { rule ->
+                validTickets.all { ticket ->
+                    rule.ranges.any { range ->
+                        ticket[field] in range
                     }
+                }
             }
+        }
 
-    val validRuleOrder = permutationsOf(rules)
-        .find { rulePermutation ->
-            validTickets.all { ticket ->
-                ticket.mapIndexed { index, field ->
-                    rulePermutation[index].ranges.any { range ->
-                        field in range
-                    }
-                }.all { it }
-            }
-        }!!
+        val singlePossibleRule = possibleRulesByField.find { it.size == 1 }
+        if (singlePossibleRule.isNullOrEmpty()) {
+            throw Error("No solution found!")
+        } else {
+            rulesByField[possibleRulesByField.indexOf(singlePossibleRule)] = singlePossibleRule[0]
+        }
+    }
 
-    val departureValues = validRuleOrder
-        .filter { it.name.contains("departure") }
-        .mapIndexed { index, _ -> yourTicket[index] }
+    val departureValues = rulesByField
+        .filter { it.value.name.contains("departure") }
+        .map { yourTicket[it.key] }
 
-    println(departureValues.sum())
+    println(departureValues.fold(1L) { a, b -> a * b })
 }
