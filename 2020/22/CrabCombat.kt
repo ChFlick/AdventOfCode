@@ -3,7 +3,7 @@ package `22`
 import java.io.File
 
 fun main(args: Array<String>) {
-    val (input1, input2) = File("${System.getProperty("user.dir")}/2020/21/input.txt")
+    val (input1, input2) = File("${System.getProperty("user.dir")}/2020/22/input.txt")
         .readText()
         .split("\n\n")
         .map {
