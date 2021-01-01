@@ -1,9 +1,6 @@
 package `19`
 
 import java.io.File
-import kotlin.math.absoluteValue
-import kotlin.math.exp
-import kotlin.math.pow
 
 fun main(args: Array<String>) {
     val (rulesInput, messagesInput) = File("${System.getProperty("user.dir")}/2020/19/input.txt")
@@ -52,15 +49,30 @@ fun main(args: Array<String>) {
             }
             is Pair<*, *> -> {
                 val pair = rule as Pair<List<Int>, List<Int>>
-                listOf(
-                    pair.first.map { ruleToString(pair.first[it as Int]!!) }.flatten(),
-                    pair.second.map { ruleToString(pair.second[it as Int]!!) }.flatten()
-                )
-                emptyList()
+                pair.first
+                    .map { ruleToString(rules[it]!!) }
+                    .fold(emptyList<String>()) { list, ele ->
+                        if (list.isEmpty())
+                            ele
+                        else
+                            ele.flatMap { e -> list.map { it + e } }
+                    }
+                    .plus(
+                pair.second
+                    .map { ruleToString(rules[it]!!) }
+                    .fold(emptyList<String>()) { list, ele ->
+                        if (list.isEmpty())
+                            ele
+                        else
+                            ele.flatMap { e -> list.map { it + e } }
+                    })
             }
             else -> throw Error()
         }
     }
 
-    println(rules[0]?.let { ruleToString(it) })
+    rules[0]?.let {
+        val possibleMessages = ruleToString(it)
+        println(messagesInput.count { it in possibleMessages })
+    }
 }
