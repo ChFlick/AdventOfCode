@@ -104,5 +104,9 @@ fun main(args: Array<String>) {
     }
     print()
 
+    println("P1")
     println((water + stillWater).filter { it.second >= yMinClay }.size)
+
+    println("P2")
+    println(stillWater.filter { it.second >= yMinClay }.size)
 }
