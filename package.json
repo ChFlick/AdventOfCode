@@ -1,11 +1,11 @@
 {
   "dependencies": {
-    "typescript": "^3.2.4"
+    "typescript": "^4.5.2"
   },
   "scripts": {
     "build": "tsc -t ES2017 --module commonjs -w"
   },
   "devDependencies": {
-    "@types/node": "^12.6.3"
+    "@types/node": "^16.11.11"
   }
 }
